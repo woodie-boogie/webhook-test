@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice Generator</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 50px auto; }
+        form { background: #f5f5f5; padding: 20px; border-radius: 5px; }
+        input, select, textarea { width: 100%; padding: 8px; margin: 10px 0; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Generate Invoice</h1>
+    <form id="invoiceForm">
+        <label>Business Type:</label>
+        <select name="business_type" required>
+            <option value="">Select...</option>
+            <option value="tech-consulting">Tech Consulting</option>
+            <option value="service-provider">Service Provider</option>
+        </select>
+
+        <label>Client/Customer Name:</label>
+        <input type="text" name="client_name" required>
+
+        <label>Invoice Number/ID:</label>
+        <input type="text" name="invoice_number" required>
+
+        <label>Amount:</label>
+        <input type="number" name="amount" step="0.01" required>
+
+        <label>Description:</label>
+        <textarea name="description"></textarea>
+
+        <label>Date:</label>
+        <input type="date" name="date" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+
+        <button type="submit">Generate Invoice</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('invoiceForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch('https://nairobiaicommunity.app.n8n.cloud/webhook/07173d13-ba2d-4604-8cd8-6cf8970931b2', {
+                    method: 'POST',
+                    headers: {
+                        'X-API-Key': 'your-secret-key-12345',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                alert('Invoice generated! PDF URL: ' + result.pdf_url);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
